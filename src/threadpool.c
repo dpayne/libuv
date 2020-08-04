@@ -159,21 +159,6 @@ static void post(QUEUE* q, enum uv__work_kind kind) {
   uv_mutex_unlock(&mutex);
 }
 
-int uv_name_workers(const char * name) {
-#ifndef _WIN32
-  unsigned int i;
-  int rc;
-
-  if (nthreads == 0)
-    return 0;
-
-  for (i = 0; i < nthreads; i++)
-    if ((rc = uv_thread_name(threads + i, name)))
-        return rc;
-#endif
-  return 0;
-}
-
 void uv__threadpool_cleanup(void) {
 #ifndef _WIN32
   unsigned int i;
@@ -264,6 +249,24 @@ static void init_once(void) {
     abort();
 #endif
   init_threads();
+}
+
+
+int uv_name_workers(const char * name) {
+#ifndef _WIN32
+  uv_once(&once, init_once);
+
+  unsigned int i;
+  int rc;
+
+  if (nthreads == 0)
+    return 0;
+
+  for (i = 0; i < nthreads; i++)
+    if ((rc = uv_thread_name(threads + i, name)))
+        return rc;
+#endif
+  return 0;
 }
 
 
