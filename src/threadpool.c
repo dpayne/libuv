@@ -159,17 +159,19 @@ static void post(QUEUE* q, enum uv__work_kind kind) {
   uv_mutex_unlock(&mutex);
 }
 
-void uv__threadpool_name(const char * name) {
+int uv_name_workers(const char * name) {
 #ifndef _WIN32
   unsigned int i;
+  int rc;
 
   if (nthreads == 0)
-    return;
+    return 0;
 
   for (i = 0; i < nthreads; i++)
-    if (uv_thread_name(threads + i, name))
-      abort();
+    if ((rc = uv_thread_name(threads + i, name)))
+        return rc;
 #endif
+  return 0;
 }
 
 void uv__threadpool_cleanup(void) {
