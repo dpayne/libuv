@@ -159,6 +159,18 @@ static void post(QUEUE* q, enum uv__work_kind kind) {
   uv_mutex_unlock(&mutex);
 }
 
+void uv__threadpool_name(const char * name) {
+#ifndef _WIN32
+  unsigned int i;
+
+  if (nthreads == 0)
+    return;
+
+  for (i = 0; i < nthreads; i++)
+    if (uv_thread_name(threads + i, name))
+      abort();
+#endif
+}
 
 void uv__threadpool_cleanup(void) {
 #ifndef _WIN32

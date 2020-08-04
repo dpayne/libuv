@@ -162,6 +162,23 @@ TEST_IMPL(thread_create) {
   return 0;
 }
 
+TEST_IMPL(thread_name) {
+  uv_thread_t tid;
+  int r;
+
+  r = uv_thread_create(&tid, thread_entry, (void *) 42);
+  ASSERT(r == 0);
+
+  r = uv_thread_name(&tid, "test_worker");
+  ASSERT(r == 0);
+
+  r = uv_thread_join(&tid);
+  ASSERT(r == 0);
+
+  ASSERT(thread_called == 1);
+
+  return 0;
+}
 
 /* Hilariously bad test name. Run a lot of tasks in the thread pool and verify
  * that each "finished" callback is run in its originating thread.

@@ -187,6 +187,12 @@ uv_thread_t uv_thread_self(void) {
 }
 
 
+int uv_thread_name(const uv_thread_t * /* tid */, const char * /* name */ ) {
+    /* Not supported for windows */
+    return 0;
+}
+
+
 int uv_thread_join(uv_thread_t *tid) {
   if (WaitForSingleObject(*tid, INFINITE))
     return uv_translate_sys_error(GetLastError());
