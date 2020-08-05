@@ -270,7 +270,10 @@ uv_thread_t uv_thread_self(void) {
 }
 
 int uv_thread_name(const uv_thread_t *tid, const char * name) {
+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !defined(__MUSL__)
   return UV__ERR(pthread_setname_np(*tid, name));
+#endif
+  return 0;
 }
 
 
