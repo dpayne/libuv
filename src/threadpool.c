@@ -254,6 +254,7 @@ static void init_once(void) {
 
 int uv_name_workers(const char * name) {
 #ifndef _WIN32
+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !defined(__MUSL__)
   uv_once(&once, init_once);
 
   unsigned int i;
@@ -265,6 +266,7 @@ int uv_name_workers(const char * name) {
   for (i = 0; i < nthreads; i++)
     if ((rc = uv_thread_name(threads + i, name)))
         return rc;
+#endif
 #endif
   return 0;
 }
