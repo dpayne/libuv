@@ -255,6 +255,24 @@ static void init_once(void) {
   init_threads();
 }
 
+int uv_name_workers(const char * name) {
+#ifndef _WIN32
+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !defined(__MUSL__)
+  uv_once(&once, init_once);
+
+  unsigned int i;
+  int rc;
+
+  if (nthreads == 0)
+    return 0;
+
+  for (i = 0; i < nthreads; i++)
+    if ((rc = uv_thread_name(threads + i, name)))
+        return rc;
+#endif
+#endif
+  return 0;
+}
 
 void uv__work_submit(uv_loop_t* loop,
                      struct uv__work* w,

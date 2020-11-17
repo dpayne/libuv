@@ -336,6 +336,13 @@ uv_thread_t uv_thread_self(void) {
   return pthread_self();
 }
 
+int uv_thread_name(const uv_thread_t *tid, const char * name) {
+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !defined(__MUSL__)
+  return UV__ERR(pthread_setname_np(*tid, name));
+#endif
+  return 0;
+}
+
 int uv_thread_join(uv_thread_t *tid) {
   return UV__ERR(pthread_join(*tid, NULL));
 }

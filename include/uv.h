@@ -1135,7 +1135,9 @@ UV_EXTERN int uv_queue_work(uv_loop_t* loop,
 
 UV_EXTERN int uv_cancel(uv_req_t* req);
 
-UV_EXTERN unsigned int uv_queue_work_idle_threads();
+UV_EXTERN int uv_name_workers(const char * name);
+
+UV_EXTERN unsigned int uv_queue_work_idle_threads(void);
 
 
 struct uv_cpu_times_s {
@@ -1842,6 +1844,7 @@ UV_EXTERN int uv_thread_detach(uv_thread_t* tid);
 UV_EXTERN int uv_thread_join(uv_thread_t* tid);
 UV_EXTERN uv_thread_t uv_thread_self(void);
 UV_EXTERN int uv_thread_equal(const uv_thread_t* t1, const uv_thread_t* t2);
+UV_EXTERN int uv_thread_name(const uv_thread_t *tid, const char * name);
 
 /* The presence of these unions force similar struct layout. */
 #define XX(_, name) uv_ ## name ## _t name;

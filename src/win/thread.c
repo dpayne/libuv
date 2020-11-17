@@ -270,6 +270,10 @@ uv_thread_t uv_thread_self(void) {
   return (uv_thread_t) uv_key_get(&uv__current_thread_key);
 }
 
+int uv_thread_name(const uv_thread_t * /* tid */, const char * /* name */ ) {
+    /* Not supported for windows */
+    return 0;
+}
 
 int uv_thread_join(uv_thread_t *tid) {
   if (WaitForSingleObject(*tid, INFINITE))
